@@ -1,0 +1,39 @@
+.input-group {
+  margin-bottom: 20px;
+  text-align: left; /* Alinha o label e input à esquerda */
+}
+
+.input-group label {
+  display: block; /* Faz o label ocupar a linha inteira */
+  margin-bottom: 8px;
+  color: #eee;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #00e0ff; /* Borda azul brilhante */
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1); /* Fundo levemente transparente */
+  color: #fff;
+  font-size: 1em;
+  box-sizing: border-box; /* Inclui padding e borda na largura total */
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #00ffff; /* Azul mais forte no foco */
+  box-shadow: 0 0 8px rgba(0, 224, 255, 0.5);
+}
+
+.input-group .input-error {
+  border-color: #ff4d4d; /* Borda vermelha para erro */
+}
+
+.error-message {
+  color: #ff4d4d; /* Texto vermelho para erro */
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
+}

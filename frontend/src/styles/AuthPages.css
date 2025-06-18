@@ -1,0 +1,32 @@
+.auth-page-container {
+  background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente para o formulário */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 100%;
+  max-width: 400px; /* Largura máxima do formulário */
+  z-index: 10; /* Garante que fique acima do overlay */
+  position: relative; /* Importante para o z-index */
+}
+
+.auth-page-container h2 {
+  margin-bottom: 25px;
+  color: #00e0ff; /* Cor azul brilhante para o título */
+  font-size: 2em;
+}
+
+.auth-page-container p {
+  margin-top: 20px;
+  color: #ccc;
+}
+
+.auth-page-container a {
+  color: #00e0ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-page-container a:hover {
+  text-decoration: underline;
+}

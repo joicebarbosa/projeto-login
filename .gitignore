@@ -1,0 +1,32 @@
+# Ignorar pastas de módulos do Node
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Ignorar arquivos de ambiente (muito importantes para segurança!)
+.env
+backend/.env
+frontend/.env
+
+# Ignorar builds e logs
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.parcel-cache/
+
+# Ignorar arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar caches de IDEs (ex: VS Code)
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Prisma
+/prisma/migrations/*.js # Se suas migrações forem geradas como JS
+/prisma/migrations/*.ts # Se suas migrações forem geradas como TS
+/prisma/generated/      # Se você tiver uma pasta 'generated' para o Prisma Client
