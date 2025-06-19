@@ -1,42 +1,27 @@
-.app-container {
-  min-height: 100vh; /* Garante que o contêiner ocupa a altura total da viewport */
-  display: flex;
-  justify-content: center; /* Centraliza o conteúdo horizontalmente */
-  align-items: center; /* Centraliza o conteúdo verticalmente */
-  background-image: url('../assets/background.jpg'); /* Caminho para sua imagem */
-  background-size: cover; /* Ajusta a imagem para cobrir todo o contêiner */
-  background-position: center; /* Centraliza a imagem no contêiner */
-  background-repeat: no-repeat; /* Evita que a imagem se repita */
-  overflow: auto; /* Permite scroll se o conteúdo for maior que a tela */
-}
+/* frontend/src/styles/App.css */
 
-/* Opcional: Adicione um overlay para melhorar a legibilidade do texto sobre a imagem */
-.app-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+/* Define que a altura mínima do corpo e do HTML é 100% da viewport */
+html, body, #root, .App {
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Overlay preto com 50% de opacidade */
-  z-index: 1; /* Garante que o overlay esteja acima da imagem mas abaixo do conteúdo */
-}
-
-/* Garante que o conteúdo do formulário fique acima do overlay */
-.app-container > * {
-  z-index: 2;
-  position: relative; /* Necessário para que o z-index funcione */
-}
-
-/* Estilos básicos para o body/html para garantir que o background cubra a tela inteira */
-html, body, #root {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
+  overflow: hidden; /* Evita barras de rolagem indesejadas */
 }
 
+.App {
+  /* Configura o background */
+  background: url('../assets/background.jpg') no-repeat center center fixed;
+  background-size: cover; /* Garante que a imagem cubra toda a área */
+  display: flex; /* Permite centralizar o conteúdo vertical e horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  min-height: 100vh; /* Garante que o App ocupe toda a altura da viewport */
+  color: white; /* Cor do texto padrão para o App */
+}
+
+/* Outros estilos globais podem ir aqui */
 body {
   font-family: Arial, sans-serif;
-  color: white; /* Cor do texto padrão para contraste com o background */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

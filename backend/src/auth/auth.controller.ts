@@ -1,31 +1,25 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+// backend/src/auth/auth.controller.ts
+import { Controller, Post, Body, UseGuards, Request, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { Public } from './decorators/public.decorator';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginDto } from './dto/login.dto'; // Verifique se esta importação está correta após renomear
 
-@Controller('auth') // Define o prefixo da rota para este controlador (ex: /auth/register)
+@Controller('auth') // <-- ESTE É O PREFIXO DA ROTA
 export class AuthController {
-  constructor(private readonly authService: AuthService) {} // Injete o AuthService
+  constructor(private authService: AuthService) {}
 
-  @Post('register') // Endpoint para cadastro: POST /auth/register
-  @HttpCode(HttpStatus.CREATED) // Retorna status 201 Created em caso de sucesso
-  async register(@Body() registerUserDto: RegisterUserDto) {
-    // O ValidationPipe já validou o registerUserDto automaticamente
-    const user = await this.authService.register(registerUserDto);
-    return {
-      message: 'Usuário cadastrado com sucesso!',
-      user,
-    };
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('login') // <-- ESTE É O SEGMENTO DA ROTA
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
-  @Post('login') // Endpoint para login: POST /auth/login
-  @HttpCode(HttpStatus.OK) // Retorna status 200 OK em caso de sucesso
-  async login(@Body() loginUserDto: LoginUserDto) {
-    // O ValidationPipe já validou o loginUserDto automaticamente
-    const user = await this.authService.login(loginUserDto);
-    return {
-      message: 'Login realizado com sucesso!',
-      user,
-    };
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 }

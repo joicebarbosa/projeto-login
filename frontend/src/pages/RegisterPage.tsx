@@ -1,7 +1,7 @@
-import React from 'react';
-import { RegisterForm } from '../components/RegisterForm';
-import { Link } from 'react-router-dom';
-import '../styles/RegisterPage.css'; // Podemos criar estilos específicos para a página
+import React from "react";
+import { RegisterForm } from "../components/RegisterForm"; // Importa o formulário de registro'
+import { Link } from "react-router-dom";
+import "../styles/RegisterPage.css"; // Podemos criar estilos específicos para a página
 
 export const RegisterPage: React.FC = () => {
   return (

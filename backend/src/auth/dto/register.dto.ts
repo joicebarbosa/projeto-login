@@ -1,7 +1,6 @@
-// src/auth/dto/register-user.dto.ts
 import { IsString, IsEmail, MinLength, Matches, IsNotEmpty } from 'class-validator';
 
-export class RegisterUserDto {
+export class RegisterDto {
   @IsNotEmpty({ message: 'O nome é obrigatório.' })
   @IsString({ message: 'O nome deve ser uma string.' })
   // Regex para validar o formato "nome.sobrenome".

@@ -1,72 +1,52 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service'; 
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import * as bcrypt from 'bcrypt'; 
+// backend/src/auth/auth.service.ts
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt'; // Importe JwtService do NestJS JWT
+import { PrismaService } from '../prisma/prisma.service'; // Importe seu PrismaService
+import * as bcrypt from 'bcrypt'; // Importe bcrypt para comparação de senhas
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {} // Injete o PrismaService
+  constructor(
+    private prisma: PrismaService, // Injeção de dependência do PrismaService
+    private jwtService: JwtService, // Injeção de dependência do JwtService
+  ) {}
 
-  async register(registerUserDto: RegisterUserDto) {
-    const { email, password, name } = registerUserDto;
-
-    // 1. Verificar se o email já existe
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      throw new ConflictException('Este email já está cadastrado.');
-    }
-
-    // 2. Hash da senha
-    const saltRounds = 10; // Número de rounds para gerar o salt (quanto maior, mais seguro, mas mais lento)
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // 3. Salvar o novo usuário no banco de dados
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword, // Salvar a senha hashada
-        name,
-      },
-      select: { // Retornar apenas os dados que você quer expor
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-      },
-    });
-
-    return user;
-  }
-
-  async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
-
-    // 1. Buscar o usuário pelo email
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
+  // Método para validar um usuário (usado no login)
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      throw new UnauthorizedException('Credenciais inválidas.'); // Não informar se é email ou senha errados por segurança
+      return null; // Usuário não encontrado
     }
 
-    // 2. Comparar a senha fornecida com a senha hashada no banco de dados
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // Compara a senha fornecida com a senha hash armazenada
+    const isPasswordMatching = await bcrypt.compare(pass, user.password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Credenciais inválidas.');
+    if (!isPasswordMatching) {
+      return null; // Senha incorreta
     }
 
-    // 3. Retornar os dados do usuário (sem a senha hashada)
-    // Em um sistema real, você retornaria um JWT aqui. Por enquanto, só os dados básicos.
+    // Se a validação for bem-sucedida, retorna o usuário sem a senha
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
+  }
+
+  // Método para gerar o token JWT após a validação bem-sucedida
+  async login(user: any) {
+    // O payload do token JWT, geralmente contém informações do usuário que não são sensíveis
+    const payload = { email: user.email, sub: user.id };
     return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
+      accessToken: this.jwtService.sign(payload), // Gera o token assinado
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     };
   }
+
+  // Método de registro que você já deve ter ou que podemos refatorar para cá
+  // Se você já tem o registro em UsersService, pode mantê-lo lá
+  // ou movê-lo para cá, para centralizar lógica de auth. Por enquanto, manteremos.
 }

@@ -1,0 +1,37 @@
+/* frontend/src/styles/DashboardPage.css */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #282c34;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.dashboard-container h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.dashboard-container p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #4fa3d1;
+}
