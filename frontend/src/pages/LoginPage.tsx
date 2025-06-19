@@ -1,5 +1,5 @@
 import React from "react";
-import { LoginForm } from "../components/LoginForm"; // ou RegisterForm
+import { LoginForm } from '../components/LoginForm';// ou RegisterForm
 import { Link } from "react-router-dom";
 import "../styles/AuthPages.css"; // Importe os estilos comuns aqui
 

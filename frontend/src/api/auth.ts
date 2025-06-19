@@ -1,62 +1,64 @@
 // frontend/src/api/auth.ts
-import axios from 'axios';
+import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/auth'; // URL base para as rotas de autenticação
+const API_URL = 'http://localhost:3000/auth'
 
 interface LoginResponse {
-  accessToken: string;
+  accessToken: string
   user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+    id: number
+    email: string
+    name: string // <-- Adicionado: Seu backend retorna o nome no login também
+  }
 }
 
-// Função para lidar com o login
-export const loginUser = async (email: string, password: string): Promise<LoginResponse> => {
+interface RegisterResponse {
+  id: number // <-- Alterado: Seu backend retorna o id do usuário registrado
+  name: string // <-- Alterado: Seu backend retorna o nome do usuário registrado
+  email: string // <-- Alterado: Seu backend retorna o email do usuário registrado
+  createdAt: string // <-- Adicionado: Seu backend retorna createdAt
+  updatedAt: string // <-- Adicionado: Seu backend retorna updatedAt
+}
+
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<LoginResponse> => {
   try {
-    const response = await axios.post<LoginResponse>(`${API_URL}/login`, {
-      email,
-      password,
-    });
-    return response.data; // Retorna os dados da resposta (accessToken e user)
+    const response = await axios.post(`${API_URL}/login`, { email, password })
+    return response.data
   } catch (error) {
-    // É importante tratar erros de forma mais específica no frontend
     if (axios.isAxiosError(error) && error.response) {
-      // O backend retornou um erro com status (ex: 401 Unauthorized)
-      throw new Error(error.response.data.message || 'Erro no login.');
-    } else {
-      // Outro tipo de erro (ex: problema de rede, backend offline)
-      throw new Error('Erro de conexão com o servidor. Verifique se o backend está rodando.');
+      throw new Error(
+        error.response.data.message || 'Erro ao fazer login. Verifique suas credenciais.' // Mensagem mais amigável
+      )
     }
+    throw new Error(
+      'Erro de conexão ao servidor. Verifique se o backend está rodando.'
+    )
   }
-};
+}
 
-// Função para armazenar o token
-export const setAuthToken = (token: string | null) => {
-  if (token) {
-    localStorage.setItem('accessToken', token);
-    // Opcional: Adicionar o token a todas as requisições futuras do Axios
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    localStorage.removeItem('accessToken');
-    delete axios.defaults.headers.common['Authorization'];
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string
+): Promise<RegisterResponse> => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, {
+      name,
+      email,
+      password
+    })
+    return response.data // o backend retorna o objeto do usuário, não { message: string, user: {} }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(
+        error.response.data.message || 'Erro ao registrar. Tente novamente.' // Mensagem mais amigável
+      )
+    }
+    throw new Error(
+      'Erro de conexão ao servidor. Verifique se o backend está rodando.'
+    )
   }
-};
-
-// Função para obter o token (útil para verificar se o usuário está logado)
-export const getAuthToken = (): string | null => {
-  return localStorage.getItem('accessToken');
-};
-
-// Opcional: Função para remover o token ao deslogar
-export const logoutUser = () => {
-  setAuthToken(null);
-  // Adicionar lógica de redirecionamento ou limpeza de estado aqui, se necessário.
-};
-
-// No carregamento da aplicação, tente carregar um token existente
-const storedToken = getAuthToken();
-if (storedToken) {
-  setAuthToken(storedToken);
 }

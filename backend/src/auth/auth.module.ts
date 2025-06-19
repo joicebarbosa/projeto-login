@@ -7,23 +7,23 @@ import { JwtStrategy } from './jwt.strategy';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './local.strategy';
-import { AuthController } from './auth.controller'; // <-- IMPORTANTE: IMPORTAR AQUI
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    ConfigModule,
+    ConfigModule, // Importe ConfigModule para poder usar ConfigService
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule], // Importe ConfigModule aqui também para o useFactory
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '60m' },
+        secret: configService.get<string>('JWT_SECRET'), // Pega o JWT_SECRET do .env
+        signOptions: { expiresIn: '60m' }, // Token expira em 60 minutos
       }),
-      inject: [ConfigService],
+      inject: [ConfigService], // Injete ConfigService no useFactory
     }),
   ],
-  controllers: [AuthController], // <-- ADICIONAR SEU AuthController AQUI
-  providers: [AuthService, JwtStrategy, LocalStrategy, PrismaService],
-  exports: [AuthService],
+  controllers: [AuthController], // Adicione seu AuthController aqui
+  providers: [AuthService, JwtStrategy, LocalStrategy, PrismaService], // Adicione seus services e strategies
+  exports: [AuthService], // Exporte AuthService se for usado em outros módulos
 })
-export class AuthModule {}
+export class AuthModule {} // Certifique-se que o nome da classe é AuthModule

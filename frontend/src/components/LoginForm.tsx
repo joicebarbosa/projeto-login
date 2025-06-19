@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Para redirecionar após o login
 import { loginUser, setAuthToken } from '../api/auth'; // Importe as funções de auth
-import InputField from './InputField'; // Seu componente de input
+import { InputField } from './InputField'; // Seu componente de input
 import '../styles/Form.css'; // Seus estilos CSS
 
 interface LoginFormProps {
