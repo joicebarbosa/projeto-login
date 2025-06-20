@@ -1,39 +1,40 @@
+/* frontend/src/styles/InputField.css */
 .input-group {
-  margin-bottom: 20px;
-  text-align: left; /* Alinha o label e input à esquerda */
+  margin-bottom: 15px; 
+  text-align: left; 
 }
 
 .input-group label {
-  display: block; /* Faz o label ocupar a linha inteira */
-  margin-bottom: 8px;
-  color: #eee;
+  display: block; 
+  margin-bottom: 5px;
+  color: #f8f8f2; 
   font-weight: bold;
+  font-size: 0.9em;
 }
 
 .input-group input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #00e0ff; /* Borda azul brilhante */
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.1); /* Fundo levemente transparente */
-  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #333;
+  color: #f8f8f2;
   font-size: 1em;
-  box-sizing: border-box; /* Inclui padding e borda na largura total */
+  box-sizing: border-box; 
+  transition: border-color 0.3s ease;
 }
 
 .input-group input:focus {
+  border-color: #61dafb;
   outline: none;
-  border-color: #00ffff; /* Azul mais forte no foco */
-  box-shadow: 0 0 8px rgba(0, 224, 255, 0.5);
 }
 
-.input-group .input-error {
-  border-color: #ff4d4d; /* Borda vermelha para erro */
+.input-group input.input-error {
+  border-color: #ff6b6b;
 }
 
-.error-message {
-  color: #ff4d4d; /* Texto vermelho para erro */
-  font-size: 0.9em;
+.input-error-message {
+  color: #ff6b6b;
+  font-size: 0.8em;
   margin-top: 5px;
-  display: block;
 }

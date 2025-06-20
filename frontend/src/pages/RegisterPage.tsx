@@ -1,16 +1,18 @@
-import React from "react";
-import { RegisterForm } from "../components/RegisterForm"; // Importa o formulário de registro (nomeado)
-import { Link } from "react-router-dom";
-import "../styles/RegisterPage.css";
+// frontend/src/pages/RegisterPage.tsx
+import React from 'react';
+import RegisterForm from '../components/RegisterForm'; // <-- CORRIGIDO: Importa como default (SEM CHAVES)
+import { Link } from 'react-router-dom';
+import '../styles/AuthPages.css'; // Usa estilos comuns para o background e centralização
 
-export const RegisterPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   return (
     <div className="auth-page-container">
-      <h2>Cadastro</h2>
       <RegisterForm />
-      <p>
+      <p className="form-link-text">
         Já tem uma conta? <Link to="/login">Faça login aqui</Link>
       </p>
     </div>
   );
 };
+
+export default RegisterPage; // Exporta como default
