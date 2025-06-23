@@ -54,9 +54,9 @@ const LoginForm: React.FC<LoginFormProps> = () => {
       <button type="submit" className="form-button">
         Entrar
       </button>
-      <p className="form-link-text">
+      {/* <p className="form-link-text">
         Ainda não tem uma conta? <a href="/register">Cadastre-se aqui</a>
-      </p>
+      </p> */}
     </form>
   );
 };

@@ -1,17 +1,17 @@
 // frontend/src/components/RegisterForm.tsx
 import React, { useState } from 'react';
-import InputField from './InputField'; // <-- CORRIGIDO: Importa como default (sem chaves)
+import InputField from './InputField';
 import '../styles/Form.css';
 import { registerUser } from '../api/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const RegisterForm: React.FC = () => { // Move a declaração do componente para o início
+const RegisterForm: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
   const [formError, setFormError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -20,18 +20,29 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
 
+  const [passwordHasMinLength, setPasswordHasMinLength] = useState(false);
+  const [passwordHasUpperCase, setPasswordHasUpperCase] = useState(false);
+  const [passwordHasSpecialChar, setPasswordHasSpecialChar] = useState(false);
+
   const navigate = useNavigate();
 
+  // --- FUNÇÃO DE VALIDAÇÃO DE NOME ATUALIZADA ---
   const validateName = (name: string): string | null => {
-    const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F]+(?:\s[a-zA-ZÀ-ÿ\u00C0-\u017F]+)*$/; 
+    // Regex para "nome.sobrenome"
+    // Permite letras (maiúsculas/minúsculas, acentuadas) antes e depois do ponto
+    // Garante que haja pelo menos um caractere antes e depois do ponto
+    // E apenas um ponto para separar nome e sobrenome
+    const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F]+(?:\s[a-zA-ZÀ-ÿ\u00C0-\u017F]+)*\.[a-zA-ZÀ-ÿ\u00C0-\u017F]+(?:\s[a-zA-ZÀ-ÿ\u00C0-\u017F]+)*$/;
+
     if (!name.trim()) {
       return 'O nome é obrigatório.';
     }
     if (!nameRegex.test(name)) {
-      return 'O nome deve conter apenas letras e pode ter espaços entre as palavras.';
+      return 'O nome deve estar no formato "nome.sobrenome" (ex: "joice.silva").';
     }
     return null;
   };
+  // -----------------------------------------------
 
   const validateEmail = (email: string): string | null => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,14 +55,22 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
     return null;
   };
 
-  const validatePassword = (password: string): string | null => {
-    if (password.length < 8) {
+  const validatePassword = (pwd: string): string | null => {
+    const minLength = pwd.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(pwd);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
+
+    setPasswordHasMinLength(minLength);
+    setPasswordHasUpperCase(hasUpperCase);
+    setPasswordHasSpecialChar(hasSpecialChar);
+
+    if (!minLength) {
       return 'A senha deve ter no mínimo 8 caracteres.';
     }
-    if (!/[A-Z]/.test(password)) {
+    if (!hasUpperCase) {
       return 'A senha deve conter pelo menos uma letra maiúscula.';
     }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    if (!hasSpecialChar) {
       return 'A senha deve conter pelo menos um caractere especial.';
     }
     return null;
@@ -72,7 +91,9 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
     setPasswordError(passErr);
     setConfirmPasswordError(confirmPassErr);
 
-    if (nameErr || emailErr || passErr || confirmPassErr) {
+    const allPasswordRulesMet = passwordHasMinLength && passwordHasUpperCase && passwordHasSpecialChar;
+
+    if (nameErr || emailErr || passErr || confirmPassErr || !allPasswordRulesMet) {
       setFormError('Por favor, corrija os erros no formulário.');
       return;
     }
@@ -81,11 +102,14 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
       const newUser = await registerUser(name, email, password);
       console.log('Usuário registrado com sucesso:', newUser);
       setSuccessMessage('Cadastro realizado com sucesso! Redirecionando para o login...');
-      
+
       setName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      setPasswordHasMinLength(false);
+      setPasswordHasUpperCase(false);
+      setPasswordHasSpecialChar(false);
 
       setTimeout(() => {
         navigate('/login');
@@ -118,7 +142,9 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
           setName(e.target.value);
           setNameError(validateName(e.target.value));
         }}
-        placeholder="Seu nome completo"
+        // --- ATUALIZE O PLACEHOLDER ---
+        placeholder="nome.sobrenome (ex: joice.silva)"
+        // -----------------------------
         error={nameError}
       />
 
@@ -151,6 +177,25 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
         error={passwordError}
       />
 
+      {/* --- BLOCO DE FEEDBACK VISUAL PARA SENHA (Sem alterações neste bloco) --- */}
+      {password && (
+        <div className="password-rules">
+          <label className={passwordHasMinLength ? 'rule-met' : 'rule-not-met'}>
+            <input type="checkbox" checked={passwordHasMinLength} disabled />
+            Mínimo 8 caracteres
+          </label>
+          <label className={passwordHasUpperCase ? 'rule-met' : 'rule-not-met'}>
+            <input type="checkbox" checked={passwordHasUpperCase} disabled />
+            Pelo menos 1 letra maiúscula
+          </label>
+          <label className={passwordHasSpecialChar ? 'rule-met' : 'rule-not-met'}>
+            <input type="checkbox" checked={passwordHasSpecialChar} disabled />
+            Pelo menos 1 caractere especial (!@#$...)
+          </label>
+        </div>
+      )}
+      {/* ------------------------------------------------------------- */}
+
       <InputField
         label="Confirme a Senha"
         id="register-confirm-password"
@@ -165,7 +210,7 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
       />
 
       <button type="submit" className="form-button">Cadastrar</button>
-      
+
       <p className="form-link-text">
         Já tem uma conta? <Link to="/login">Faça login aqui</Link>
       </p>
@@ -173,4 +218,4 @@ const RegisterForm: React.FC = () => { // Move a declaração do componente para
   );
 };
 
-export default RegisterForm; // <-- Adicione esta linha no final
+export default RegisterForm;

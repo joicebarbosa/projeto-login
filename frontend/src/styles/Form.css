@@ -1,0 +1,71 @@
+/* frontend/src/styles/Form.css */
+
+/* ... (seus estilos existentes) ... */
+
+.password-rules {
+  margin-top: -10px;
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 0.85em;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 5px;
+}
+
+.password-rules label {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 2px 0;
+}
+
+.password-rules input {
+  width: 16px; /* Tamanho da caixa */
+  height: 16px;
+  margin-right: 8px; /* Espaçamento entre a caixa e o texto */
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  appearance: none; /* Remove a aparência padrão do checkbox */
+  outline: none; /* Remove a borda de foco padrão */
+  cursor: default; /* Indica que não é interativo (pois está desabilitado) */
+}
+
+.password-rules .rule-met input {
+  background-color: #63d471; /* Fundo verde quando a regra é atendida */
+  border-color: #63d471;
+  position: relative; /* Para posicionar o checkmark */
+}
+
+.password-rules .rule-met input::before {
+  content: '✓'; /* Símbolo de checkmark */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.9em;
+}
+
+.password-rules .rule-not-met input {
+  background-color: transparent; /* Fundo transparente quando a regra não é atendida */
+}
+
+.password-rules .rule-met {
+  color: #ccc; /* Mantém a cor do texto mesmo quando a regra é atendida */
+}
+
+.password-rules .rule-not-met {
+  color: #ccc;
+}
+
+.password-rules .rule-met input + span {
+    color: #ccc; /* Mantém a cor do texto */
+}
+
+.password-rules .rule-not-met input + span {
+    color: #ccc;
+}
+
+/* ... (restante dos seus estilos) ... */
